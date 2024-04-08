@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if brandName %}
+        {{ brandName }}
+    {% else %}
+        Car Hub Market
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <style>
+        /* Inline CSS styles */
+
+        /* Styling for alerts */
+        .alert {
+            width: 50%;
+            margin: auto;
+        }
+
+        /* Styling for brand filter buttons */
+        .btn-group .btn {
+            margin-bottom: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 10px 15px;
+        }
+
+        /* Styling for brand filter buttons on hover */
+        .btn-group .btn:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        /* Styling for card container */
+        .card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        /* Styling for card hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Styling for card image */
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* Styling for card body */
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Styling for card titles */
+        .card-title a {
+            color: #333;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        /* Styling for card titles on hover */
+        .card-title a:hover {
+            color: #007bff;
+        }
+
+        /* Styling for card texts */
+        .card-text {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Styling for 'View Details' button */
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        /* Styling for 'View Details' button on hover */
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+
+    <div class="container">
+        <div class="row">
+            <!-- Left side: Category filter -->
+            <div class="col-md-3">
+                <h2 class="text-center">Category Filter</h2>
+                <div class="btn-group">
+                    <a class="btn btn-primary text-decoration-none" href="{% url 'home' %}">All Categories</a>
+                    {% for category in categories %}
+                        <a class="btn btn-primary text-decoration-none" href="{% url 'category_filter' category.name %}">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right side: Cars display -->
+            <div class="col-md-9">
+                <div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-{{ message.tags }} text-center" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <h2 class="text-center">Brand Filter</h2>
+                <div class="btn-group d-flex justify-content-center">
+                    <a class="btn btn-primary text-decoration-none" href="{% url 'home' %}">All Brands</a>
+                    {% for brand in brands %}
+                        <a class="btn btn-primary text-decoration-none" href="{% url 'brands_filter' brand.name %}">{{ brand.name }}</a>
+                    {% endfor %}
+                </div>
+
+                <div class="row justify-content-center mt-3">
+                    {% for car in cars %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                {% if car.image %}
+                                    <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.name }}">
+                                {% else %}
+                                    <img src="{% static 'no_image_available.jpg' %}" class="card-img-top" alt="No Image Available">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title"><a class="text-decoration-none" href="{% url 'car_detail' car.id %}">{{ car.name }}</a></h5>
+                                    <p class="card-text">{{ car.description|truncatewords:15 }}</p>
+                                    <p class="card-text">Price: NPR{{ car.price }}</p>
+                                    <p class="card-text">Brand: {{ car.brand.name }}</p>
+                                    <div class="text-center">
+                                        <a href="{% url 'car_detail' car.id %}" class="btn btn-primary">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

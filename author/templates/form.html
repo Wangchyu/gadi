@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <style>
+        /* Form container styling */
+        form {
+            width: 50%;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form title styling */
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
+        /* Alert box styling */
+        .alert {
+            width: 50%;
+            margin: auto;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Form field styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Button styling */
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #ff6b6b; /* Red */
+        }
+
+        .btn-primary:hover {
+            background-color: #ff4f4f; /* Darker Red */
+        }
+
+        .btn-secondary {
+            background-color: #6bd4ff; /* Blue */
+        }
+
+        .btn-secondary:hover {
+            background-color: #4fafff; /* Darker Blue */
+        }
+
+        /* Link styling */
+        .text-link {
+            text-align: center;
+            margin-top: 10px;
+            color: #333333;
+        }
+
+        .text-link a {
+            color: #6bd4ff; /* Blue */
+            text-decoration: none;
+        }
+
+        .text-link a:hover {
+            color: #4fafff; /* Darker Blue */
+        }
+
+        /* Text input styling */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #cccccc;
+            box-sizing: border-box;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #ff4f4f; /* Red */
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+
+    <form action="" method="POST" novalidate>
+        <h1 class="form-title">{{ title }} Page</h1>
+
+        <div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                <div class="error-message">
+                    {{ field.errors|striptags }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <input class="btn btn-primary" type="submit" value="{{ button_text }}">
+
+        {% if button_text == "Login" %}
+            <p class="text-link">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+        {% elif button_text == "Sign Up" %}
+            <p class="text-link">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        {% endif %}
+    </form>
+
+{% endblock %}
